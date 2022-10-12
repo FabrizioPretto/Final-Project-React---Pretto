@@ -24,24 +24,3 @@ function NavBarHeader() {
 
 export default NavBarHeader;
 
-
-/*
-<header>
-            <div id="logo">
-                <img src="logo2.jpg" alt="Cabañas Torres" title="Cabañas Torres">
-                <audio src="naturaleza.mp3" preload="auto" controls></audio>
-            </div>
-            <nav class="botonera_menu">
-                <ul class="menu">
-                   <li><a href="galeria.html">Galeria</a></li>
-                   <li><a href="servicios.html">Servicios</a>
-                    <ul class="submenu">
-                       <li><a href="excursiones.html">Excursiones</a>
-                       <li><a href="eventos.html">Eventos</a>
-                   </ul>
-                   </li>
-                   <li><a href="contacto.html">Contacto</a></li>
-                </ul>
-            </nav>
-        </header>
-*/
