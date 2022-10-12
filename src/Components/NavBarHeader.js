@@ -10,9 +10,9 @@ function NavBarHeader() {
         <Container>
           <Navbar.Brand href="#home"><LogoWidget/></Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="#home">Artículos</Nav.Link>
-            <Nav.Link href="#features">Accesorios</Nav.Link>
-            <Nav.Link href="#pricing">Nosotros</Nav.Link>
+            <Nav.Link href="#Artículos">Artículos</Nav.Link>
+            <Nav.Link href="#Accesorios">Accesorios</Nav.Link>
+            <Nav.Link href="#Nosotros">Nosotros</Nav.Link>
           </Nav>
           <CartWidget/>
         </Container>
