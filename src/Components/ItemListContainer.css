@@ -1,0 +1,13 @@
+
+.bienvenida{
+    width: 980px;
+    height: 600px;
+    text-align: center;
+    margin: auto;
+    padding: 100px;
+}
+
+#logoSaludo{
+    width: 400px;
+    height: 300px;
+}
