@@ -8,9 +8,9 @@ const ItemDetailContainer = () => {
 
 
 
-    const { id } = useParams()
+    const { id } = useParams();
 
-    const [item, setItem] = useState([])
+    const [item, setItem] = useState([]);
 
     async function getBeersArray() {
         const beers = await getBeers();

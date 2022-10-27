@@ -127,6 +127,6 @@ export function getBeers() {
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve(Beers);
-        }, 2000);
+        }, 1000);
     });
 }

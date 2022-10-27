@@ -11,11 +11,11 @@ function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <NavBarHeader />
-
+        <NavBarHeader brewery={["Bierhaus", "Astor", "Baba", "Beata", "Kraken", "Mur", "Peñón del Águila", "Strange Brewing"]} />
         <Routes>
           <Route path="/" exact element={<ItemListContainer />}></Route>
-          <Route path="/home" exact element={<ItemListContainer />}></Route>
+          <Route path="/category/:brewery" exact
+            element={<ItemListContainer brewery={["Bierhaus", "Astor", "Baba", "Beata", "Kraken", "Mur", "Peñón del Águila", "Strange Brewing"]} />}></Route>
           <Route path="/item/:id" exact element={<ItemDetailContainer />}></Route>
         </Routes>
 
@@ -25,13 +25,6 @@ function App() {
   )
 
 
-  /*
-    return (
-      <div className="App">
-        <NavBarHeader />
-        <ItemListContainer />
-      </div>
-    );*/
 }
 
 export default App;
