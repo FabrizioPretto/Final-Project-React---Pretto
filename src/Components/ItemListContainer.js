@@ -1,14 +1,26 @@
+import ItemList from './ItemList';
+import { getBeers } from './Beers';
+import React, { useState, useEffect } from "react";
 
-import './ItemListContainer.css';
 
-const ItemListContainer = ({titulo, logoSaludo}) => {
+const ItemListContainer = (props) => {
+
+  const [items, setItems] = useState([]);
+
+  async function beersApi() {
+    const beers = await getBeers()
+    setItems(beers);
+  };
+
+
+  useEffect(() => {
+    beersApi();
+  }, []);
 
   return (
-    <div className = "bienvenida">
-    <h3>{titulo}</h3>
-    <img id = "logoSaludo" alt= "logo_tienda" src = {logoSaludo} />
-    </div>  
+    <ItemList items={items} />
   );
 }
 
 export default ItemListContainer;
+
