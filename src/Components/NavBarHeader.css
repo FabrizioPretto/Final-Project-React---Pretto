@@ -1,8 +1,10 @@
 
 .Container{
     background-color: white;
+    
 }
 
 #LogoTienda {
-    text-align: left;
+   /* text-align: left;*/
+    margin-right: 800px;
 }

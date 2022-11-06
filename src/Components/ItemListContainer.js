@@ -1,42 +1,68 @@
 import ItemList from './ItemList';
 import { getBeers } from './Beers';
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
+import OrdenarButton from './OrdenarButton';
+import { darkModeContext } from '../Context/Context';
+import { useContext } from 'react';
 
-const ItemListContainer = (props) => {
+const ItemListContainer = () => {
 
   const [items, setItems] = useState([]);
 
-  /*const bb = props.brewery
-  console.log(bb)*/
+  const { brewery } = useParams();
 
-  //FALTA FILTRAR EL ARRAY DE ACUERDO A LA CATEGORÍA (Brewery) PARA ENVIAR EL PARÁMETRO ITEMS
-
-
-  const { categoryBrewery } = useParams();
-
+  let filtrado = [];
 
   async function beersApi() {
     const beers = await getBeers()
-    if (categoryBrewery === undefined) {
+    if (brewery === undefined)
       setItems(beers);
-    }
     else {
-
-
+      filtrado = beers.filter((beer) => beer.Brewery.includes(brewery)).map((beer, i) => filtrado[i] = beer);
+      setItems(filtrado);
     }
-
   };
-
 
   useEffect(() => {
     beersApi();
   }, []);
 
+  const isDarkMode = useContext(darkModeContext);
+
   return (
-    <ItemList items={items} />
+    <>
+      <darkModeContext.Provider value={false}>
+        <OrdenarButton />
+        {isDarkMode + "ss"}
+        <ItemList items={items} />
+      </darkModeContext.Provider>
+    </>
   );
 }
 
 export default ItemListContainer;
 
+
+/*
+function ordenar()
+{
+    let seleccion = $("#miSeleccion").val();
+    if (seleccion == "menor") {
+        productosJSON.sort(function(a, b) {
+            return a.precio - b.precio
+        });
+    } else if (seleccion == "mayor") {
+        productosJSON.sort(function(a, b) {
+            return b.precio - a.precio
+        });
+    } else if (seleccion == "alfabetico") {
+        productosJSON.sort(function(a, b) {
+            return a.nombre.localeCompare(b.nombre);
+        });
+    }
+    $("#listadoProductos").empty();
+    renderizarProductos();
+    
+}
+*/

@@ -14,7 +14,7 @@ const ItemDetailContainer = () => {
 
     async function getBeersArray() {
         const beers = await getBeers();
-        setItem(beers[id]);
+        setItem(beers[id - 1]);
     };
 
 

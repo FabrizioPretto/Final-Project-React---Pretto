@@ -8,10 +8,11 @@ const Item = ({ item }) => {
     return (
         <div>
             <br />
-            <Card id={item.Id} style={{ width: '275px', height: '400px' }}>
-                <Card.Img variant="top" src={item.Imagen} style={{ width: '275px', height: '250px' }} />
+            <Card id={item.Id} style={{ width: '275px', height: '400px', border: '2px solid #000' }}>
+                <Card.Img variant="top" src={item.Imagen} style={{ width: '271px', height: '250px' }} />
                 <Card.Body>
                     <Card.Title>{item.Nombre}</Card.Title>
+                    <Card.Title>{item.Brewery}</Card.Title>
                     <Link to={`/item/${item.Id}`}>
                         <Button variant="primary">Detalle</Button>
                     </Link>

@@ -4,7 +4,7 @@ import './LogoWidget.css'
 
 const LogoWidget = () => {
     return (
-        <img alt= "logo_image" href="#cart" src={logo}/>
+        <img alt="logo_image" href="/" src={logo} />
     );
 }
 
