@@ -1,56 +1,133 @@
-
-import cart from './Images/cart.png'
-import { useParams } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import ItemCount from './ItemCount';
 import { Link } from 'react-router-dom';
+import binIcon from './Images/bin.jpg';
+import { ActualCartContext } from '../Context/CartContext';
+import Table from 'react-bootstrap/Table';
+import Image from "react-bootstrap/Image";
+import { useState, useEffect, createElement } from 'react';
+import './Cart.css'
+import OrderForm from './OrderForm';
+import React from 'react';
+//import SubtotalItem from './SubtotalItem';
 
 const Cart = () => {
-    let { nro } = useParams();
+    //let { nro } = useParams();
 
+    const { cartContent, clearCart, getCartlength, removeItem, subtotalItem } = ActualCartContext();
+    const [cartItems, setCartItems] = useState(getCartlength());
+    //const [subtotalItem, setSubtotalItem] = useState();
 
-    let beerList = [];
+    useEffect(() => { }, [cartItems]);
+    // useEffect(() => { }, [subtotalItem]);
 
-    for (let i = 0; i < localStorage.length; i++) {
-
-        if (JSON.parse(localStorage.getItem(i)) != null) {
-            let beer = JSON.parse(localStorage.getItem(i));
-            beerList.push(beer);
-        }
+    function updateCartTotal() {
+        let total = 0;
+        cartContent.map(item => (
+            total = total + (item.Precio * item.Cantidad)
+        ));
+        return total;
     }
 
-    console.log(beerList);
-    return (
-        <>
-            <h2>N° de Orden: {nro}</h2>
-            <div className="container d-flex justify-content-center aling-items-center h-180" >
-                <div className="row" >
-                    {beerList.map(item =>
-                    (
-                        <div className="col-md-3" key={item.Id} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                            <Card id={item.Id} style={{ width: '275px', height: '450px', border: '2px solid #000' }}>
-                                <Card.Img variant="top" src={item.Imagen} style={{ width: '271px', height: '250px' }} />
-                                <Card.Body>
-                                    <Card.Title>{item.Nombre}</Card.Title>
-                                    <Card.Title>{item.Brewery}</Card.Title>
-                                    <Card.Title>Unidades: {item.Quantity}</Card.Title>
-                                    <Card.Title>Total: {(item.Quantity * item.Precio)}</Card.Title>
-                                    <Link to={`/item/${item.Id}`}>
-                                        <Button variant="primary">Quitar</Button>
-                                    </Link>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                    ))}
-                </div>
+    function removeCartItem(item) {
+        removeItem(item);
+        setCartItems(getCartlength());
+        updateCartTotal();
+    }
+
+    function showOrderForm() {
+        let orderFormDiv = document.getElementById("orderForm")
+        //let orderFormDiv = React.createElement(`<div>${<OrderForm />}</div>`);
+        //container.append(orderFormDiv)
+        orderFormDiv.setAttribute('style', 'collapse');
+        //container.appendChild(orderFormDiv);
+    }
+
+    function hideShowForm() {
+        let orderFormDiv = document.getElementById("orderForm");
+        orderFormDiv.setAttribute('style', 'none');
+
+    }
+
+
+    if (cartItems > 0) {
+
+        return (<>
+            <div id='cartContainer'>
+                <Table striped bordered hover size="sm" id='CartTable'>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Quitar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {cartContent.map(item =>
+                        (
+                            <tr key={item.Id}>
+                                <td><Image src={item.Imagen} roundedCircle thumbnail style={{ width: '125px', height: '100px', marginLeft: '30px', marginRight: 'auto' }} /></td>
+                                <td>{item.Nombre}</td>
+                                <td>$ {item.Precio}</td>
+                                <td>{item.Cantidad}</td>
+                                {/* <td><ItemCount item={item} /></td> */}
+                                <td>$ {subtotalItem(item.Precio, item.Cantidad)}</td>
+                                <td><Image variant="outline-light" onClick={() => { removeCartItem(item) }} src={binIcon} style={{ width: '49px', height: '67px', marginLeft: '20px', marginRight: 'auto', marginTop: '25px' }} /></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+                <Card id='CartCard'>
+                    <Card.Header as="h5">RESUMEN</Card.Header>
+                    <Card.Body>
+                        <Card.Title>Total: $ {updateCartTotal()}</Card.Title>
+                        <Button onClick={() => showOrderForm()} variant="success">Realizar Compra</Button>
+                        <Link to={`/`}>
+                            <Button variant="warning" style={{ marginLeft: '7px', marginTop: '10px' }} onClick={() => { clearCart(); }}>Vaciar Carrito</Button>
+                        </Link>
+                    </Card.Body>
+                </Card>
             </div>
-            <br></br>
-            <img alt="cart_image" href="/" src={cart} />
+            <div id="orderForm" style={{ visibility: 'hidden' }}  ><OrderForm /></div>
         </>
-    );
+        );
+    }
+    else {
+        return (<Card style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '25px' }}>
+            <Card.Body>
+                <Card.Title>Ooops...</Card.Title>
+                <Card.Text>
+                    No existen artículos en el carrito
+                </Card.Text>
+                <Link to={`/`}>
+                    <Button variant="primary">Seguir Comprando</Button>
+                </Link>
+            </Card.Body>
+        </Card>);
+    }
+
+
+
+
 }
 
 export default Cart;
+
+/*
+<ButtonGroup aria-label="Basic example" style={{ marginTop: '5px' }}>
+                                        <Button disabled={item.Cantidad === 1 ? true : false} variant="dark" style={{ marginRight: '5px' }} >-</Button>
+                                        <h3 id="contador" style={{ marginRight: '5px' }}>{item.Cantidad}</h3>
+                                        <Button disabled={item.Stock === item.Cantidad ? true : false} onClick={() => console.log("+1")} variant="dark" >+</Button>
+                                    </ButtonGroup>
+                                    */
+
+/* <Card.Title>Subtotal: $ {updateCartTotal()}</Card.Title> */
+
 
 /*
 <Card id={item.Id} style={{ width: '275px', height: '400px', border: '2px solid #000' }}>
@@ -66,13 +143,7 @@ export default Cart;
 
 */
 
-/*
- <h3>Cerveza: {item.nombre}</h3>
-            <h4>Cantidad: {quantity}</h4>
-            */
-
-
-/*            
+/*           
 //AGREGAR ITEM AL LS
 function actualizarLS(arrayCarrito) {
     localStorage.setItem("carritoStorage", JSON.stringify(arrayCarrito));
@@ -105,4 +176,101 @@ function agregarItemAlCarrito(idProd) {
     }
     actualizarLS(arrayCarrito);
 }
+*/
+
+
+/*
+
+
+    if (getCartlength() > 0) {
+        return (
+            <div id='cartContainer'>
+                <Table striped bordered hover size="sm" id='CartTable'>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Quitar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {cartContent.map(item =>
+                        (
+                            <tr key={item.Id}>
+                                <td><Image src={item.Imagen} roundedCircle thumbnail style={{ width: '125px', height: '100px', marginLeft: '30px', marginRight: 'auto' }} /></td>
+                                <td>{item.Nombre}</td>
+                                <td>$ {item.Precio}</td>
+                                <td>
+                                    <ButtonGroup aria-label="Basic example" style={{ marginTop: '5px' }}>
+                                        <Button disabled={item.Cantidad === 1 ? true : false} variant="dark" style={{ marginRight: '5px' }} >-</Button>
+                                        <h3 id="contador" style={{ marginRight: '5px' }}>{item.Cantidad}</h3>
+                                        <Button disabled={item.Stock === item.Cantidad ? true : false} variant="dark" >+</Button>
+                                    </ButtonGroup>
+                                </td>
+                                <td>$ {item.Cantidad * item.Precio}</td>
+                                <td><Image variant="outline-light" onClick={() => { removeItem(item) }} src={binIcon} style={{ width: '49px', height: '67px', marginLeft: '20px', marginRight: 'auto', marginTop: '25px' }} /></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+                <Card id='CartCard'>
+                    <Card.Header as="h5">RESUMEN</Card.Header>
+                    <Card.Body>
+                        <Card.Title>Subtotal: $ {updateCartTotal()}</Card.Title>
+                        <Button variant="success">FINALIZAR COMPRA</Button>
+                        <Button variant="warning" style={{ marginTop: '10px' }} onClick={() => clearCart()}>Vaciar Carrito</Button>
+                    </Card.Body>
+                </Card>
+            </div>
+        );
+    }
+    else {
+        return (<Card style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '25px' }}>
+            <Card.Body>
+                <Card.Title>Ooops...</Card.Title>
+                <Card.Text>
+                    No existen artículos en el carrito
+                </Card.Text>
+                <Link to={`/`}>
+                    <Button variant="primary">Seguir Comprando</Button>
+                </Link>
+            </Card.Body>
+        </Card>);
+    }
+
+    */
+
+/*Rendering Condicional
+import React from 'react';
+import './style.css';
+import Spinner from 'react-bootstrap/Spinner';
+
+function Loader({ loading }) {
+return (
+<>
+  {loading ? (
+     <>
+    <Spinner variant="primary" animation="border" role="status">
+      <span className="visually-hidden">Loading...</span>
+    </Spinner>
+    </>
+  ) : (
+    ''
+  )}
+</>
+);
+}
+
+export default function App() {
+return (
+<div>
+  <Loader loading={true} />
+</div>
+);
+}
+
+
 */

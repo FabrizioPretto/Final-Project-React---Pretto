@@ -8,3 +8,15 @@
    /* text-align: left;*/
     margin-right: 800px;
 }
+
+.Nav{
+    margin-right: 5px;
+}
+
+ul li{
+    list-style-type: none;
+    display:inline;
+    margin-right: 10px;
+    font-size: 20px;
+}
+

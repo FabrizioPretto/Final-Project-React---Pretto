@@ -1,49 +1,40 @@
 import ItemList from './ItemList';
-import { getBeers } from './Beers';
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
 import OrdenarButton from './OrdenarButton';
-import { darkModeContext } from '../Context/Context';
-import { useContext } from 'react';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
+
 
 const ItemListContainer = () => {
 
   const [items, setItems] = useState([]);
 
-  const { brewery } = useParams();
-
-  let filtrado = [];
-
-  async function beersApi() {
-    const beers = await getBeers()
-    if (brewery === undefined)
-      setItems(beers);
-    else {
-      filtrado = beers.filter((beer) => beer.Brewery.includes(brewery)).map((beer, i) => filtrado[i] = beer);
-      setItems(filtrado);
-    }
-  };
-
   useEffect(() => {
-    beersApi();
+
+    const db = getFirestore();
+
+    const beerItems = collection(db, "Beers");
+
+    getDocs(beerItems).then((snapshot) => {
+
+      setItems(snapshot.docs.map((doc) => ({ ...doc.data() })))
+
+    });
   }, []);
 
-  const isDarkMode = useContext(darkModeContext);
 
   return (
     <>
-      <darkModeContext.Provider value={false}>
-        <OrdenarButton />
-        {isDarkMode + "ss"}
-        <ItemList items={items} />
-      </darkModeContext.Provider>
+
+      <ItemList items={items} />
     </>
   );
 }
 
 export default ItemListContainer;
 
-
+/*
+<OrdenarButton />
+*/
 /*
 function ordenar()
 {
@@ -65,4 +56,19 @@ function ordenar()
     renderizarProductos();
     
 }
+*/
+
+/*
+async function beersApi() {
+      const beers = await getBeers();
+      //if (brewery === undefined)
+      setItems(beers);
+      else {
+        filtrado = beers.filter((beer) => beer.Brewery.includes(brewery)).map((beer, i) => filtrado[i] = beer);
+        setItems(filtrado);
+    };
+useEffect(() => {
+      //beersApi();
+  }, []);
+
 */

@@ -10,7 +10,6 @@ const ItemList = ({ items }) => {
                 <div className="row" >
                     {items.map(item =>
                     (
-
                         <div className="col-md-3" key={item.Id} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                             <Item item={item} />
                         </div>

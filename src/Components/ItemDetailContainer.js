@@ -1,36 +1,27 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import ItemDetail from "./ItemDetail";
-import { getBeers } from './Beers';
-
+import { doc, getDoc, getFirestore } from 'firebase/firestore';
 
 const ItemDetailContainer = () => {
-
-
 
     const { id } = useParams();
 
     const [item, setItem] = useState([]);
 
-    async function getBeersArray() {
-        const beers = await getBeers();
-        setItem(beers[id - 1]);
-    };
-
-
 
     useEffect(() => {
 
-        getBeersArray();
+        const db = getFirestore();
 
-    }, [])
+        const beer = doc(db, "Beers", id);
 
+        getDoc(beer).then((snapshot) => {
+            setItem(snapshot.data());
+        })
+    }, []);
 
-    return (
-        <>
-            <ItemDetail item={item} />
-        </>
-    );
+    return (<ItemDetail item={item} />);
 }
 
 export default ItemDetailContainer
