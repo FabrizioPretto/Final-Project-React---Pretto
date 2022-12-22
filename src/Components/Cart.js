@@ -16,8 +16,8 @@ import React from 'react';
 const Cart = () => {
     //let { nro } = useParams();
 
-    const { cartContent, clearCart, getCartlength, removeItem, subtotalItem } = ActualCartContext();
-    const [cartItems, setCartItems] = useState(getCartlength());
+    const { cartContent, clearCart, getCartLength, removeItem, subtotalItem } = ActualCartContext();
+    const [cartItems, setCartItems] = useState(getCartLength());
     //const [subtotalItem, setSubtotalItem] = useState();
 
     useEffect(() => { }, [cartItems]);
@@ -33,7 +33,7 @@ const Cart = () => {
 
     function removeCartItem(item) {
         removeItem(item);
-        setCartItems(getCartlength());
+        setCartItems(getCartLength());
         updateCartTotal();
     }
 
@@ -111,12 +111,13 @@ const Cart = () => {
         </Card>);
     }
 
-
-
-
 }
 
 export default Cart;
+
+//<Link to={`/`}> </Link>
+//import writeBatch from "firebase/firestore"
+
 
 /*
 <ButtonGroup aria-label="Basic example" style={{ marginTop: '5px' }}>

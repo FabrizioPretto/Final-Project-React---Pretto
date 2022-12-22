@@ -2,20 +2,15 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-//import InputGroup from 'react-bootstrap/InputGroup';
 import Row from 'react-bootstrap/Row';
-import { addDoc, getDocs, collection, getFirestore } from 'firebase/firestore';
+import { addDoc, writeBatch, collection, getFirestore, doc, getDoc } from 'firebase/firestore';
 import { ActualCartContext } from '../Context/CartContext';
-//import firebase from 'firebase';
-import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 
-function OrderForm() {
-    const [validated, setValidated] = useState(false);
-    const [formData, setFormData] = useState({ Name: '', Surname: '', Email: '', Tel: '' })
-    const [idOrder, setIdOrder] = useState();
 
+function OrderForm() {
+    const [formData, setFormData] = useState({ Name: '', Surname: '', Email: '', Tel: '' })
     const { cartContent, totalCart } = ActualCartContext();
 
     /*
@@ -36,6 +31,7 @@ function OrderForm() {
     const createOrder = () => {
 
         const db = getFirestore();
+
         const ordersCollection = collection(db, "Orders");
 
         let order = {};
@@ -53,23 +49,34 @@ function OrderForm() {
         let total = totalCart();
         order.total = total;
 
-
         addDoc(ordersCollection, order);
+        let beer;
+        let newStock;
+
+        cartContent.map(item => {
+            const batch = writeBatch(db);
+            let eachItem = doc(db, "Beers", `${item.Id}`);
+            getDoc(eachItem).then((snapshot) => {
+                beer = snapshot.data();
+                newStock = beer.Stock - item.Cantidad
+                batch.update(eachItem, { Stock: newStock })
+                batch.commit();
+            })
+        })
 
 
         let cadena = "Compra realizada a nombre de: " + formData.Name + " " + formData.Surname + " por un total de $ " + total + ".";
         let cadena2 = "Nos contactaremos al correo electrónico: " + formData.Email + " o al teléfono " + formData.Tel;
         return (Swal.fire({
             title: 'Compra finalizada!',
-            confirmButtonText: 'Genial!',
+            confirmButtonText: '<a href="/">Genial!</a>',
             html: cadena + '\n\n' + cadena2,
             icon: 'success',
             width: 1800,
-            height: 1000,
             padding: '3em',
             color: 'black',
-            footer: '<a href={`/`}>Seguir Comprando</a>'
-
+            footer: '<a href="/checkout/${order.Id}">Seguir Comprando</a>',
+            footer: '<a href="/">Seguir Comprando</a>'
         })
 
         )
@@ -116,7 +123,7 @@ function OrderForm() {
             <Row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Form.Group as={Col} md="7" controlId="validationPhone">
                     <Form.Label>Teléfono</Form.Label>
-                    <Form.Control type="phone" name="Tel" placeholder="Teléfono" required value={formData.Tel}
+                    <Form.Control type="phone" name="Tel" placeholder="" required value={formData.Tel}
                         onChange={handleOnChange} />
                     <Form.Control.Feedback type="invalid">
                         Por favor ingrese un número de teléfono válido.
