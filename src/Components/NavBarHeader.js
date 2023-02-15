@@ -5,10 +5,8 @@ import CartWidget from "./CartWidget";
 import LogoWidget from './LogoWidget';
 import './NavBarHeader.css';
 import { Link } from 'react-router-dom';
-import { ActualCartContext } from '../Context/CartContext';
-import { useEffect } from 'react';
 
-function NavBarHeader({ props, cartLengthvar }) {
+function NavBarHeader({ props }) {
 
   return (
     <Navbar bg="light" variant="light">
@@ -27,7 +25,7 @@ function NavBarHeader({ props, cartLengthvar }) {
             <li><Link to={`/category/${props[8]}`} style={{ textDecoration: 'none', color: 'black' }}> {props[8]}</Link></li>
           </ul>
         </Nav>
-        <Navbar.Brand><CartWidget cartLength={cartLengthvar} /></Navbar.Brand>
+        <Navbar.Brand><CartWidget /></Navbar.Brand>
       </Container>
     </Navbar>
   );
@@ -36,5 +34,11 @@ function NavBarHeader({ props, cartLengthvar }) {
 export default NavBarHeader;
 
 /*
-display: 'flex', flexDirection: 'row', 
+display: 'flex', flexDirection: 'row',
+
+<CartWidget/>
 */
+
+//<Button disabled={item.Stock === cantidad ? true : false}
+
+//style={{ visibility: 'collapse' }}

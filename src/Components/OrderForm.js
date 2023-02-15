@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { addDoc, writeBatch, collection, getFirestore, doc, getDoc } from 'firebase/firestore';
 import { ActualCartContext } from '../Context/CartContext';
 import Swal from 'sweetalert2';
+import CheckOut from './CheckOut';
+import { Link } from 'react-router-dom';
 
 
 
 function OrderForm() {
     const [formData, setFormData] = useState({ Name: '', Surname: '', Email: '', Tel: '' })
-    const { cartContent, totalCart } = ActualCartContext();
+    const { cartContent, totalCart, clearCart } = ActualCartContext();
+    const [orderDate, setOrderDate] = useState(new Date());
 
     /*
     const handleSubmit = (event) => {
@@ -28,7 +32,14 @@ function OrderForm() {
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
 
-    const createOrder = () => {
+    /*
+    function validateData()
+    {
+        return true;
+    }
+    */
+
+    function createOrder() {
 
         const db = getFirestore();
 
@@ -37,7 +48,8 @@ function OrderForm() {
         let order = {};
 
         order.buyer = formData;
-        order.date = new Date()//firebase.firestore.Timestamp.fromDate(new Date());
+        //order.date = new Date();//firebase.firestore.Timestamp.fromDate(new Date());
+        order.date = orderDate;
         order.items = cartContent.map(cartItem => {
             const id = cartItem.Id;
             const title = cartItem.Nombre;
@@ -64,7 +76,16 @@ function OrderForm() {
             })
         })
 
+        // <Link to = {`/checkout/${orderDate}`}></Link>
 
+        clearCart(2);
+
+
+        //VACIAR BADGE
+        //VACIAR CARRITO
+
+
+        /*
         let cadena = "Compra realizada a nombre de: " + formData.Name + " " + formData.Surname + " por un total de $ " + total + ".";
         let cadena2 = "Nos contactaremos al correo electrónico: " + formData.Email + " o al teléfono " + formData.Tel;
         return (Swal.fire({
@@ -79,14 +100,15 @@ function OrderForm() {
             footer: '<a href="/">Seguir Comprando</a>'
         })
 
-        )
+        )*/
 
     }
 
     return (
-        <Form id="CustomerInfo" onChange={handleOnChange} style={{ textAlign: 'center', marginLeft: 'auto', marginRight: 'auto' }}>
+        // <Card style={{ marginLeft: '25px', marginRight: 'auto' }}>
+        <Form id="CustomerInfo" onChange={handleOnChange} style={{ textAlign: 'center', marginTop: '15px', marginRight: 'auto', marginLeft: '15px', borderStyle: 'none' }}>
             <Row style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                <Form.Group as={Col} md="4" controlId="validationNames">
+                <Form.Group as={Col} md="5" controlId="validationNames">
                     <Form.Label>Nombres</Form.Label>
                     {/* <Form.Control type="text" placeholder="Ingrese el Nombre" name="name" value={formData.name} onChange={handleOnChange} /> */}
                     <Form.Control
@@ -98,8 +120,8 @@ function OrderForm() {
                     />
                     <Form.Control.Feedback>Correcto</Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group as={Col} md="3" controlId="validationSurname">
-                    <Form.Label>Apellido</Form.Label>
+                <Form.Group as={Col} md="5" controlId="validationSurname">
+                    <Form.Label>Apellidos</Form.Label>
                     <Form.Control
                         name="Surname"
                         type="text"
@@ -113,7 +135,7 @@ function OrderForm() {
             </Row>
             <br></br>
             <Row style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                <Form.Group className="mb-3" as={Col} md="7" controlId="validationEmail">
+                <Form.Group className="mb-3" as={Col} md="10" controlId="validationEmail">
                     <Form.Label>Email</Form.Label>
                     <Form.Control type="email" name="Email" placeholder="" value={formData.Email}
                         onChange={handleOnChange} />
@@ -121,7 +143,7 @@ function OrderForm() {
                 </Form.Group>
             </Row>
             <Row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}>
-                <Form.Group as={Col} md="7" controlId="validationPhone">
+                <Form.Group as={Col} md="10" controlId="validationPhone">
                     <Form.Label>Teléfono</Form.Label>
                     <Form.Control type="phone" name="Tel" placeholder="" required value={formData.Tel}
                         onChange={handleOnChange} />
@@ -133,17 +155,22 @@ function OrderForm() {
             </Row>
             <br></br>
             <Row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}>
-
-                <Button style={{ width: '175px', marginLeft: '350px' }} onClick={() => createOrder()}  >Confirmar Compra</Button>
-
+                {/* <Link to={`/ item / ${ item.Id } `}> */}
+                {/* "/checkout/:order" */}
+                {/* {/* <Link to={`/checkout/${orderDate}`}> */}
+                <Link to={`/checkout`}>
+                    <Button style={{ width: '200px', marginLeft: '90px', marginRight: 'auto' }} onClick={() => createOrder()}>Confirmar Compra</Button>
+                </Link>
             </Row>
-
         </Form>
-
+        //</Card >
     );
 }
-
+//Route path = "/checkout/:order"
 export default OrderForm;
+
+//
+//style from row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}
 
 //type = "submit"
 
@@ -158,6 +185,6 @@ export default OrderForm;
                     />
                 </Form.Group>*/
 /*
-<Link to={`/item/${item.Id}`}>
+<Link to={`/ item / ${ item.Id } `}>
     <Button variant="primary">Detalle</Button>
 </Link>*/

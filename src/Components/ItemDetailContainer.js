@@ -9,7 +9,6 @@ const ItemDetailContainer = () => {
 
     const [item, setItem] = useState([]);
 
-
     useEffect(() => {
 
         const db = getFirestore();
@@ -21,8 +20,16 @@ const ItemDetailContainer = () => {
         })
     }, []);
 
-    return (<ItemDetail item={item} />);
+
+    return (
+        <div style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+            <ItemDetail item={item} />
+        </div>
+    )
 }
 
 export default ItemDetailContainer
 
+// backgroundColor: '#716add'
+
+//backgroundColor: '#716add', 

@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { useState } from "react";
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 
 
 const cartContext = createContext([]);
@@ -8,6 +8,7 @@ const cartContext = createContext([]);
 export const ActualCartContext = () => useContext(cartContext);
 
 export default function CartProvider({ children }) {
+
 
     const [cartContent, setCartContent] = useState([]);
 
@@ -18,7 +19,7 @@ export default function CartProvider({ children }) {
 
     function isInCart(id) {
         let found = cartContent.find(beer => (beer.Id === id))
-        if (found != undefined)
+        if (found !== undefined)
             return true;
         else
             return false;
@@ -29,36 +30,42 @@ export default function CartProvider({ children }) {
             return cartContent.indexOf(item);
     }
 
-
     const getCartLength = () => {
         return cartContent.length;
     }
 
-    const clearCart = () => {
+    /*showClass: {
+    popup: 'animate__animated animate__fadeInDown'
+    }*/
+    const clearCart = (option) => {
         setCartContent([]);
-        let timerInterval
+        let timerInterval;
+        removeCartWidget();
 
-        Swal.fire({
-            title: 'Se vació el carrito',
-            html: 'Regresando al inicio en <b></b> milisegundos.',
-            timer: 2000,
-            confirmButtonText: '<a href="/">Genial!</a>',
-            timerProgressBar: true,
-            didOpen: () => {
-                Swal.showLoading()
-                const b = Swal.getHtmlContainer().querySelector('b')
-                timerInterval = setInterval(() => {
-                    b.textContent = Swal.getTimerLeft()
-                }, 100)
-            },
-            willClose: () => {
-                clearInterval(timerInterval)
-            }
-        }).then((result) => {
-            if (result.dismiss === Swal.DismissReason.timer) {
-                console.log('I was closed by the timer')
-            }
-        })
+        if (option === 1) {
+            Swal.fire({
+                title: 'Se vació el carrito',
+                html: 'Regresando al inicio en <b></b> milisegundos.',
+                timer: 2000,
+                confirmButtonText: '<a href="/">Genial!</a>',
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                    const b = Swal.getHtmlContainer().querySelector('b')
+                    timerInterval = setInterval(() => {
+                        b.textContent = Swal.getTimerLeft()
+                    }, 100)
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log('I was closed by the timer')
+                }
+            })
+        }
+
     }
 
     const getQuantity = (item) => {
@@ -74,20 +81,23 @@ export default function CartProvider({ children }) {
     const increaseCartItem = (item) => {
         let array = cartContent;
         let value = array[cartContent.indexOf(item)].Cantidad;
-        value++;
-        array[cartContent.indexOf(item)].Cantidad = value;
-        console.log(array[cartContent.indexOf(item)].Cantidad);
-        setCartContent(array);
-
+        if (array[cartContent.indexOf(item)].Cantidad < array[cartContent.indexOf(item)].Stock) {
+            value++;
+            array[cartContent.indexOf(item)].Cantidad = value;
+            setCartContent(array);
+        }
+        return value;
     }
 
     const decreaseCartItem = (item) => {
         let array = cartContent;
         let value = array[cartContent.indexOf(item)].Cantidad;
-        value--;
-        array[cartContent.indexOf(item)].Cantidad = value;
-        console.log(array[cartContent.indexOf(item)].Cantidad);
-        setCartContent(array);
+        if (array[cartContent.indexOf(item)].Cantidad > 1) {
+            value--;
+            array[cartContent.indexOf(item)].Cantidad = value;
+            setCartContent(array);
+        }
+        return value;
     }
 
     const subtotalItem = (precio, cantidad) => {
@@ -95,6 +105,23 @@ export default function CartProvider({ children }) {
         return subtotal;
     }
 
+    const showCartWidget = () => {
+
+        let cartWidgetDiv = document.getElementById("cartWidget");
+        if (cartWidgetDiv.getAttribute("style") === "visibility: hidden;") {
+            cartWidgetDiv.setAttribute('style', 'visibility: visible;');
+        }
+    }
+
+    const removeCartWidget = () => {
+        let cartWidgetDiv = document.getElementById("cartWidget");
+        cartWidgetDiv.setAttribute('style', 'visibility: hidden;');
+    }
+
+    const setBadge = () => {
+        let badgeValue = document.getElementById("badge");
+        badgeValue.innerHTML = getCartLength();
+    }
 
     const addItem = (objeto) => {
 
@@ -108,10 +135,10 @@ export default function CartProvider({ children }) {
         else {
             let array = cartContent;
             array.push(objeto);
-            console.log(objeto);
             setCartContent(array);
-            getCartLength();
-            if (objeto.Cantidad == 1) {
+            setBadge();
+            showCartWidget();
+            if (objeto.Cantidad === 1) {
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -137,6 +164,9 @@ export default function CartProvider({ children }) {
         let array = cartContent;
         array.splice(getIndex(item), 1);
         setCartContent(array);
+        setBadge();
+        if (getCartLength() === 0)
+            removeCartWidget();
     }
 
     /* {
@@ -152,11 +182,13 @@ export default function CartProvider({ children }) {
     const totalCart = () => {
         let acu = 0;
         cartContent.map(item => (acu = acu + item.Precio * item.Cantidad));
-        console.log(acu);
         return acu;
     }
 
-    return (<cartContext.Provider value={{ cartContent, addItem, isInCart, clearCart, getCartLength, getQuantity, removeItem, increaseCartItem, decreaseCartItem, totalCart, subtotalItem }}>
+    return (<cartContext.Provider value={{
+        cartContent, addItem, isInCart, clearCart, getCartLength, getQuantity,
+        removeItem, increaseCartItem, decreaseCartItem, totalCart, subtotalItem
+    }}>
         {children}
     </cartContext.Provider>)
 }

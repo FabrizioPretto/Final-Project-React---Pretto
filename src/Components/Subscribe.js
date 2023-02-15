@@ -17,69 +17,86 @@ function Subscribe() {
     }*/
 
     function handleOnChange(e) {
-
         setSubscriberData({ Email: e.target.value })
+    }
+
+    function handleGreaterThan(e) {
+        setGreaterThan(!greaterThan);
     }
 
     const saveUser = () => {
 
-        const db = getFirestore();
+        if (greaterThan === true) {
+            const db = getFirestore();
 
-        const subscribersCollection = collection(db, "Subscribers");
+            const subscribersCollection = collection(db, "Subscribers");
 
-        let subscriber = {};
+            let subscriber = {};
 
-        let newUser = query(collection(db, "Subscribers"), where("Email", "==", subscriberData.Email))
+            let newUser = query(collection(db, "Subscribers"), where("Email", "==", subscriberData.Email))
 
-        getDocs(newUser).then((snapshot) => {
-            if (snapshot.size === 0) {
-                subscriber = subscriberData;
-                addDoc(subscribersCollection, subscriber);
-                Swal.fire({
-                    position: 'center',
-                    icon: 'success',
-                    title: '¡Felicitaciones! Ya te encuentras subscripto',
-                    html: 'Pronto comenzarás a recibir nuestros descuentos y promociones',
-                    showConfirmButton: false,
-                    timer: 2500
-                })
-            }
-            else {
-                Swal.fire({
-                    position: 'center',
-                    icon: 'error',
-                    title: 'El correo electrónico ya se encuentra subscripto',
-                    showConfirmButton: false,
-                    timer: 2500
-                })
-            }
-        })
-        setSubscriberData({ Email: '' });
+            getDocs(newUser).then((snapshot) => {
+                if (snapshot.size === 0) {
+                    subscriber = subscriberData;
+                    addDoc(subscribersCollection, subscriber);
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: '¡Felicitaciones! Ya te encuentras subscripto',
+                        html: 'Pronto comenzarás a recibir nuestros descuentos y promociones',
+                        showConfirmButton: false,
+                        timer: 2500
+                    })
+                }
+                else {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'El correo electrónico ya se encuentra subscripto',
+                        showConfirmButton: false,
+                        timer: 2500
+                    })
+                }
+            })
+            setSubscriberData({ Email: '' });
+        }
+        else {
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Debes seleccionar la casilla de mayor de 18 años',
+                showConfirmButton: false,
+                timer: 2500
+            })
+        }
     }
 
 
     return (
+        <div style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'baseline', marginRight: '35px' }} >
+            <Form onChange={handleOnChange} >
+                <Form.Group >
+                    <Form.Control
+                        style={{ width: '360px' }}
+                        type="email"
+                        placeholder="Ingrese su correo electrónico para subscribirse"
+                        value={subscriberData.Email}
+                        onChange={handleOnChange}
+                    />
 
-        <Form onChange={handleOnChange}>
-            <Form.Group style={{ display: 'flex', flexDirection: 'row', gap: '10px', alignItems: 'baseline', marginRight: '35px' }}>
-                <Form.Control
-                    style={{ width: '360px' }}
-                    type="email"
-                    placeholder="Ingrese su correo electrónico para subscribirse"
-                    value={subscriberData.Email}
-                    onChange={handleOnChange}
-                />
-                <Form.Switch required={true} type="switch" label="Soy mayor de 18 años" feedback="Debes seleccionar la casilla" />
-                <Button variant="primary" onClick={() => saveUser()}>Suscribirse</Button>
-            </Form.Group>
-        </Form>
-
+                </Form.Group>
+            </Form>
+            <Form.Check
+                defaultChecked={greaterThan}
+                type="switch"
+                label="Soy mayor de 18 años"
+                feedback="Debes seleccionar la casilla"
+                onChange={handleGreaterThan}
+            />
+            <Button variant="primary" onClick={() => saveUser()}>Suscribirse</Button>
+        </div>
     );
 
 }
 
 export default Subscribe;
-
-/*
-type="switch"
-*/

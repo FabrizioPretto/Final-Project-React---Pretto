@@ -20,14 +20,14 @@ function App() {
           <NavBarHeader props={["Bierhaus", "Astor", "Baba", "Beata", "Kraken", "Mur", "Peñón del Águila", "Strange Brewing"]} />
           <SubHeader />
           <SlideShow />
-          <div style={{ display: 'flex', flexDirection: 'row', height: '2600px', alignItems: 'baseline', marginLeft: 'auto', marginRight: 'auto' }}>
+          <div id='routesContainer' style={{ display: 'flex', flexDirection: 'row', height: '2600px', alignItems: 'baseline', marginLeft: 'auto', marginRight: 'auto' }}>
             <Routes>
               <Route path="/" exact element={<ItemListContainer />}></Route>
               <Route path="/orderBy/:order" exact element={<ItemOrderContainer />}></Route>
               <Route path="/category/:brewery" exact element={<ItemCategoryContainer />}></Route>
               <Route path="/item/:id" exact element={<ItemDetailContainer />}></Route>
               <Route path="/cart" exact element={<Cart />}></Route>
-              <Route path="/checkout/:order" exact element={<CheckOut />}></Route>
+              <Route path="/checkout" exact element={<CheckOut />}></Route>
             </Routes>
           </div>
         </div>
@@ -37,3 +37,4 @@ function App() {
 }
 
 export default App;
+//<Route path="/checkout/:order" exact element={<CheckOut />}></Route>

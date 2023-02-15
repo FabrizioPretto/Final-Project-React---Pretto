@@ -12,7 +12,7 @@ const ItemDetail = ({ item }) => {
     return (
         <>
             <div className="d-flex justify-content-center">
-                <Card style={{ width: '500px', height: '750px', margin: '50px', backgroundColor: '#f8f9fa' }}>
+                <Card style={{ width: '500px', height: '750px', margin: '50px', backgroundColor: '#f8f9fa', marginLeft: 'auto', marginRight: 'auto' }}>
                     <Link to={`/`}>
                         <CloseButton style={{ marginLeft: '470px' }} />
                     </Link>

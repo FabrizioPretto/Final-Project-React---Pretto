@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Swal from 'sweetalert2';
 import hombreBebiendo from './Images/hombre-bebiendo.gif'
 import { ActualCartContext } from '../Context/CartContext';
-import { updateCartTotal } from './Cart'
+
 
 
 const ItemCount = ({ item }) => {
@@ -18,7 +18,6 @@ const ItemCount = ({ item }) => {
 
     useEffect(() => { }, [cantidad]);
     useEffect(() => { }, [cartItemQuantity]);
-
 
     function increaseItem(item) {
         setCartItemQuantity(cartItemQuantity + 1);

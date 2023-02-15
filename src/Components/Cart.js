@@ -11,17 +11,29 @@ import { useState, useEffect, createElement } from 'react';
 import './Cart.css'
 import OrderForm from './OrderForm';
 import React from 'react';
-//import SubtotalItem from './SubtotalItem';
+import { collection, getDocs, getFirestore, query, where } from 'firebase/firestore';
 
 const Cart = () => {
     //let { nro } = useParams();
 
-    const { cartContent, clearCart, getCartLength, removeItem, subtotalItem } = ActualCartContext();
+    const { cartContent, clearCart, getCartLength, removeItem, subtotalItem, increaseCartItem, decreaseCartItem } = ActualCartContext();
     const [cartItems, setCartItems] = useState(getCartLength());
     //const [subtotalItem, setSubtotalItem] = useState();
+    const [cantidad, setCantidad] = useState(1);
 
+    useEffect(() => { }, [cantidad]);
     useEffect(() => { }, [cartItems]);
-    // useEffect(() => { }, [subtotalItem]);
+    //useEffect(() => { }, [subtotalItem]);
+
+    /*useEffect(() => {
+        const db = getFirestore();
+
+        filtrado = query(collection(db, "Beers"), where("Brewery", "==", brewery))
+        getDocs(filtrado).then((snapshot) => {
+            setfilterItems(snapshot.docs.map((doc) => ({ ...doc.data() })))
+        })
+    }, [brewery]);*/
+
 
     function updateCartTotal() {
         let total = 0;
@@ -37,6 +49,25 @@ const Cart = () => {
         updateCartTotal();
     }
 
+
+    function setSubtotalRow(price, quantity, idProduct) {
+        let counterValue = document.getElementById(`subtotalRow${idProduct}`);
+        counterValue.innerHTML = "$ " + subtotalItem(price, quantity);
+    }
+
+    function setQuantity(price, value, idProduct) {
+        let counterValue = document.getElementById(`contador${idProduct}`);
+        counterValue.innerHTML = value;
+        setSubtotalRow(price, value, idProduct);
+        setCartTotal();
+    }
+
+
+    function setCartTotal() {
+        let actualTotal = document.getElementById("total");
+        actualTotal.innerHTML = "Total: $ " + updateCartTotal();
+    }
+
     function showOrderForm() {
         let orderFormDiv = document.getElementById("orderForm")
         //let orderFormDiv = React.createElement(`<div>${<OrderForm />}</div>`);
@@ -48,14 +79,41 @@ const Cart = () => {
     function hideShowForm() {
         let orderFormDiv = document.getElementById("orderForm");
         orderFormDiv.setAttribute('style', 'none');
-
     }
 
+
+    function drawCart() {
+        return (
+            cartContent.map(item =>
+            (
+                <tr key={item.Id} id={`${item.Id}`}>
+                    <td><Image src={item.Imagen} roundedCircle thumbnail style={{ width: '125px', height: '100px', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto' }} /></td>
+                    <td>{item.Nombre}</td>
+                    <td>$ {item.Precio}</td>
+                    {/* <td>{item.Cantidad}</td> */}
+                    <td><div>
+                        <ButtonGroup aria-label="Basic example" style={{ marginTop: '5px' }}>
+                            <Button disabled={item.Cantidad === 1 ? true : false} variant="primary" style={{ marginRight: '5px' }} onClick={() => setQuantity(item.Precio, decreaseCartItem(item), item.Id)}>-</Button>
+                            <h3 id={`contador${item.Id}`} style={{ marginRight: '5px' }}>{item.Cantidad}</h3>
+                            <Button disabled={item.Stock === item.Cantidad ? true : false} variant="primary" onClick={() => setQuantity(item.Precio, increaseCartItem(item), item.Id)}>+</Button>
+                        </ButtonGroup>
+                    </div></td>
+                    <td id={`subtotalRow${item.Id}`}>$ {subtotalItem(item.Precio, item.Cantidad)}</td>
+                    <td><Image variant="outline-light"
+                        onClick={() => { removeCartItem(item) }}
+                        src={binIcon}
+                        style={{ width: '49px', height: '67px', marginLeft: 'auto', marginRight: 'auto', marginTop: 'auto', marginBottom: 'auto' }} />
+                    </td>
+                </tr>
+            ))
+
+        )
+    }
 
     if (cartItems > 0) {
 
         return (<>
-            <div id='cartContainer'>
+            <div id='cartContainer' style={{ width: '1600px', display: 'flex', flexWrap: 'wrap', alignContent: 'space-around', alignItems: 'baseline', marginLeft: 'auto', marginRight: 'auto' }}>
                 <Table striped bordered hover size="sm" id='CartTable'>
                     <thead>
                         <tr>
@@ -68,34 +126,24 @@ const Cart = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {cartContent.map(item =>
-                        (
-                            <tr key={item.Id}>
-                                <td><Image src={item.Imagen} roundedCircle thumbnail style={{ width: '125px', height: '100px', marginLeft: '30px', marginRight: 'auto' }} /></td>
-                                <td>{item.Nombre}</td>
-                                <td>$ {item.Precio}</td>
-                                <td>{item.Cantidad}</td>
-                                {/* <td><ItemCount item={item} /></td> */}
-                                <td>$ {subtotalItem(item.Precio, item.Cantidad)}</td>
-                                <td><Image variant="outline-light" onClick={() => { removeCartItem(item) }} src={binIcon} style={{ width: '49px', height: '67px', marginLeft: '20px', marginRight: 'auto', marginTop: '25px' }} /></td>
-                            </tr>
-                        ))}
+                        {drawCart()}
                     </tbody>
                 </Table>
+
                 <Card id='CartCard'>
                     <Card.Header as="h5">RESUMEN</Card.Header>
                     <Card.Body>
-                        <Card.Title>Total: $ {updateCartTotal()}</Card.Title>
+                        <Card.Title id='total'>Total: $ {updateCartTotal()}</Card.Title>
                         <Button onClick={() => showOrderForm()} variant="success">Realizar Compra</Button>
                         <Link to={`/`}>
-                            <Button variant="warning" style={{ marginLeft: '7px', marginTop: '10px' }} onClick={() => { clearCart(); }}>Vaciar Carrito</Button>
+                            <Button variant="warning" style={{ marginLeft: '7px', marginTop: '10px' }} onClick={() => { clearCart(1) }}>Vaciar Carrito</Button>
                         </Link>
                     </Card.Body>
                 </Card>
+                <div id="orderForm"><OrderForm /></div>
             </div>
-            <div id="orderForm" style={{ visibility: 'hidden' }}  ><OrderForm /></div>
         </>
-        );
+        );//style={{ visibility: 'collapse', border: 'solid', backgroundColor: 'red' }} 
     }
     else {
         return (<Card style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '25px' }}>
@@ -114,6 +162,26 @@ const Cart = () => {
 }
 
 export default Cart;
+
+/*
+{cartContent.map(item =>
+                        (
+                            <tr key={item.Id}>
+                                <td><Image src={item.Imagen} roundedCircle thumbnail style={{ width: '125px', height: '100px', marginLeft: '30px', marginRight: 'auto' }} /></td>
+                                <td>{item.Nombre}</td>
+                                <td>$ {item.Precio}</td>
+                                <td><ItemCount item={item} /></td>
+                                <td>$ {subtotalItem(item.Precio, item.Cantidad)}</td>
+                                <td><Image variant="outline-light" onClick={() => { removeCartItem(item) }} src={binIcon} style={{ width: '49px', height: '67px', marginLeft: '20px', marginRight: 'auto', marginTop: '25px' }} /></td>
+                            </tr >
+                        ))}
+*/
+
+
+
+
+
+
 
 //<Link to={`/`}> </Link>
 //import writeBatch from "firebase/firestore"
