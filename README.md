@@ -1,6 +1,6 @@
 # Lupulenta
 
-## _Tienda de venta de Cervezas Artesanales
+## Tienda de venta de Cervezas Artesanales
 
 Link Live Demo:
 
