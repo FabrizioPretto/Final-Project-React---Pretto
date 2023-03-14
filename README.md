@@ -1,70 +1,66 @@
-# Getting Started with Create React App
+# Lupulenta
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Tienda de venta de Cervezas Artesanales
 
-## Available Scripts
+Link Live Demo:
 
-In the project directory, you can run:
+<a href="https://cocky-newton-ccb4fc.netlify.app"> <img src="./public/favicon.ico" width="75"> </a>
+
+## Proyecto Final React.js
+
+- Duracion 7 semanas
+- 4 Hs semanales
+- <a href="https://nodejs.org/es/"> Node.js </a>
+- Componentes, Promesas, asincronia y MAP
+- APIs
+- Routing y Navegacion
+- Eventos
+- Context
+- Rendering
+- Firebase
+
+## Historia de Usuario
+
+- El Actor debe poder ingresar, navegar por los productos o bien seleccionar por marca e ir a sus detalles.
+- Desde el detalle el Actor debe poder ver la descripción, foto y precio. Puede seleccionar la cantidad y sumarlo al carrito.
+- Una vez que el Actor ingresa al menos un producto al carrito, se deberá visualizar en la esquina superior derecha, tanto un icono de acceso al carrito, como un contador con el número de productos diferentes que se encuentran en el mismo.
+- El Actor puede modificar desde su carrito la cantidad de cada uno de los items sumados, vaciar el mismo, o bien presionar el botón "realizar compra", para acceder a un formulario donde ingrese sus datos. 
+- El Actor ingresa su nombre, apellido, teléfono e e-mail, y al finalizar la validación, debe presionar el botón de "realizar compra".
+- Al clickear "realizar compra" debe guardarse en la base de datos una orden que tenga todos con los datos, un detalle de los productos (descontando los mismos del stock de la base), la fecha y dar feedback de la compra.
+
+## Features
+
+- Barra buscador de Productos
+- Nueva estetica y mejora de visualizacion
+- Integracion con API de MercadoPago
+
+## Librerias externas a create-react-app utilizadas
+
+- [ReactBootstrap] - React Bootstrap version 2.5.0
+- [sweetalert2] - sweetalert2 version 11.6.5
+- [FireBase] - Firebase version 9.14.0
+- [Nodejs] - Node.js version 16.17.1
+
+[sweetalert2]: [https://react-icons.github.io/react-icons/icons?name=ai](https://sweetalert2.github.io/)
+[reactbootstrap]: [https://react-bootstrap.github.io/](https://react-bootstrap.netlify.app/getting-started/introduction/)
+[firebase]: [https://firebase.google.com/?hl=es-419&gclid=CjwKCAjwq9mLBhB2EiwAuYdMtZI2IsyBl252oJEzKpKDVPkPKdywwyLsmWtxoXvBIrRXn65bM-HPChoC-9IQAvD_BwE&gclsrc=aw.ds](https://firebase.google.com/?hl=es)
+[nodejs]: [https://nodejs.org/es/]
+
+## Instalacion
+
+> Note: Lupulenta requires [https://nodejs.org/es/] v10+ to run.
+
+```sh
+$ cd Lupulenta
+$ npm install
+```
 
 ### `npm start`
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Abrir [http://localhost:3000](http://localhost:3000) para verlo en tu browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## License
 
-### `npm test`
+Fabrizio Pretto
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+**Free Software**
