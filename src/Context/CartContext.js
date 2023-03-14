@@ -185,6 +185,8 @@ export default function CartProvider({ children }) {
         return acu;
     }
 
+
+
     return (<cartContext.Provider value={{
         cartContent, addItem, isInCart, clearCart, getCartLength, getQuantity,
         removeItem, increaseCartItem, decreaseCartItem, totalCart, subtotalItem

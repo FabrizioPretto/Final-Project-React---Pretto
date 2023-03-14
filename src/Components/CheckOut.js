@@ -31,16 +31,6 @@ const CheckOut = () => {
 
     }, []);
 
-    /*function parseDate(buyDateOrder) {
-        if ((buyDateOrder.date.toDate() != maxDate) || (buyDateOrder.date.toDate() != null))
-            console.log(buyDateOrder.date.toDate());
-        else
-            console.log(buyDateOrder);
-
-    }*/
-
-    //CASTEAR FECHAS Y GUARDAR LA MÁS RECIENTE, PORQUE LA BASE GUARDA LOS REGISTROS SIN ORDEN
-
     return (
         <>
             {orders.map((order) => {

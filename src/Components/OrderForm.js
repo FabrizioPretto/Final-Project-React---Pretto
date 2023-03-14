@@ -1,43 +1,81 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import { addDoc, writeBatch, collection, getFirestore, doc, getDoc } from 'firebase/firestore';
 import { ActualCartContext } from '../Context/CartContext';
-import Swal from 'sweetalert2';
-import CheckOut from './CheckOut';
-import { Link } from 'react-router-dom';
-
-
+import { useNavigate } from 'react-router-dom';
 
 function OrderForm() {
+    const [validated, setValidated] = useState(false);
+    const [submitted, setSubmitted] = useState(false);
     const [formData, setFormData] = useState({ Name: '', Surname: '', Email: '', Tel: '' })
-    const { cartContent, totalCart, clearCart } = ActualCartContext();
     const [orderDate, setOrderDate] = useState(new Date());
+    //const [focus, setFocus] = useState(formData.Name);
+    const { cartContent, totalCart, clearCart } = ActualCartContext();
 
-    /*
+    const navigate = useNavigate();
+    let expresion = /^[a-z][\w.-]+@\w[\w.-]+\.[\w.-]*[a-z][a-z]$/i;
+
+    /* useEffect(() => {
+         console.log(focus);
+     }, [focus]);*/
+
+    useEffect(() => {
+        if (validated === true) {
+            createOrder();
+        }
+    }, [validated]);
+
+    useEffect(() => {
+        if (submitted === true) {
+            navigate(`/checkout`);
+            clearCart();
+        }
+    }, [submitted]);
+
+
     const handleSubmit = (event) => {
-        const form = event.currentTarget;
-        if (form.checkValidity() === false) {
+        if (validated === false) {
             event.preventDefault();
             event.stopPropagation();
+            validateFields();
         }
-        console.log(form)
-    };*/
+    };
+
+    function validateFields() {
+        if (formData.Name.length < 3) {
+            setFocus(formData.Name);
+            setValidated(false);
+        }
+        else {
+            if (formData.Surname.length < 3) {
+                formData.Surname;
+                setValidated(false);
+            }
+            else {
+                if (!expresion.test(formData.Email)) {
+                    setFocus(formData.Email);
+                    setValidated(false);
+                }
+                else {
+                    if (formData.Tel.length < 10) {
+                        setFocus(formData.Tel);
+                        setValidated(false);
+                    }
+                    else {
+                        setValidated(true);
+                    }
+                }
+            }
+        }
+    }
+
 
     function handleOnChange(e) {
-
         setFormData({ ...formData, [e.target.name]: e.target.value })
     }
-
-    /*
-    function validateData()
-    {
-        return true;
-    }
-    */
 
     function createOrder() {
 
@@ -75,116 +113,122 @@ function OrderForm() {
                 batch.commit();
             })
         })
+        setSubmitted(true);
 
-        // <Link to = {`/checkout/${orderDate}`}></Link>
-
-        clearCart(2);
-
-
-        //VACIAR BADGE
-        //VACIAR CARRITO
-
-
-        /*
-        let cadena = "Compra realizada a nombre de: " + formData.Name + " " + formData.Surname + " por un total de $ " + total + ".";
-        let cadena2 = "Nos contactaremos al correo electrónico: " + formData.Email + " o al teléfono " + formData.Tel;
-        return (Swal.fire({
-            title: 'Compra finalizada!',
-            confirmButtonText: '<a href="/">Genial!</a>',
-            html: cadena + '\n\n' + cadena2,
-            icon: 'success',
-            width: 1800,
-            padding: '3em',
-            color: 'black',
-            footer: '<a href="/checkout/${order.Id}">Seguir Comprando</a>',
-            footer: '<a href="/">Seguir Comprando</a>'
-        })
-
-        )*/
-
+        //ARCHIVO README - Probar desde una computadora externa los comandos de cd e install
+        //VALIDACIONES SUBSCRIBE Y FORMULARIO DE DATOS
+        //BUILD Y NETLIFY
     }
 
     return (
-        // <Card style={{ marginLeft: '25px', marginRight: 'auto' }}>
-        <Form id="CustomerInfo" onChange={handleOnChange} style={{ textAlign: 'center', marginTop: '15px', marginRight: 'auto', marginLeft: '15px', borderStyle: 'none' }}>
-            <Row style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                <Form.Group as={Col} md="5" controlId="validationNames">
-                    <Form.Label>Nombres</Form.Label>
-                    {/* <Form.Control type="text" placeholder="Ingrese el Nombre" name="name" value={formData.name} onChange={handleOnChange} /> */}
+        <Form noValidate validated={validated} onSubmit={handleSubmit} onChange={handleOnChange}>
+            <Row className="mb-3">
+                <Form.Group as={Col} md="5" controlId="nameValidation">
+                    <Form.Label>Nombre</Form.Label>
                     <Form.Control
-                        name="Name"
+                        required
                         type="text"
-                        placeholder=""
+                        placeholder="Juan"
+                        name="Name"
                         value={formData.Name}
                         onChange={handleOnChange}
+                        isValid={formData.Name.length >= 3}
+                        isInvalid={formData.Name.length < 3}
                     />
-                    <Form.Control.Feedback>Correcto</Form.Control.Feedback>
+                    <Form.Control.Feedback type="invalid">
+                        El nombre debe poseer más de tres caracteres
+                    </Form.Control.Feedback>
+                    <Form.Control.Feedback type='valid'>Correcto</Form.Control.Feedback>
                 </Form.Group>
-                <Form.Group as={Col} md="5" controlId="validationSurname">
-                    <Form.Label>Apellidos</Form.Label>
+                <Form.Group as={Col} md="5" controlId="surnameValidation">
+                    <Form.Label>Apellido</Form.Label>
                     <Form.Control
-                        name="Surname"
+                        required
                         type="text"
-                        placeholder=""
+                        placeholder="Perez"
+                        name="Surname"
                         value={formData.Surname}
                         onChange={handleOnChange}
+                        isValid={formData.Surname.length >= 3}
+                        isInvalid={formData.Surname.length < 3}
                     />
-                    <Form.Control.Feedback>Correcto</Form.Control.Feedback>
-
-                </Form.Group>
-            </Row>
-            <br></br>
-            <Row style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                <Form.Group className="mb-3" as={Col} md="10" controlId="validationEmail">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" name="Email" placeholder="" value={formData.Email}
-                        onChange={handleOnChange} />
-                    <Form.Control.Feedback>Correcto</Form.Control.Feedback>
-                </Form.Group>
-            </Row>
-            <Row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}>
-                <Form.Group as={Col} md="10" controlId="validationPhone">
-                    <Form.Label>Teléfono</Form.Label>
-                    <Form.Control type="phone" name="Tel" placeholder="" required value={formData.Tel}
-                        onChange={handleOnChange} />
                     <Form.Control.Feedback type="invalid">
-                        Por favor ingrese un número de teléfono válido.
+                        El apellido debe poseer más de tres caracteres
                     </Form.Control.Feedback>
-                    <Form.Control.Feedback>Correcto</Form.Control.Feedback>
+                    <Form.Control.Feedback type='valid'>Correcto</Form.Control.Feedback>
                 </Form.Group>
             </Row>
-            <br></br>
+            <Row className="mb-3">
+                <Form.Group as={Col} md="10" controlId="emailValidation">
+                    <Form.Label>Email</Form.Label>
+                    <Form.Control
+                        type="email"
+                        name="Email"
+                        placeholder="correo@electrónico.com"
+                        required
+                        value={formData.Email}
+                        onChange={handleOnChange}
+                        isValid={expresion.test(formData.Email)}
+                        isInvalid={!expresion.test(formData.Email)}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        El formato válido de correo electrónico debe ser el siguiente: correo@electronico.com
+                    </Form.Control.Feedback>
+                    <Form.Control.Feedback type='valid'>Correcto</Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group as={Col} md="10" controlId="telValidation">
+                    <Form.Label>Teléfono</Form.Label>
+                    <Form.Control
+                        type="number"
+                        name="Tel"
+                        placeholder="3514685216"
+                        required
+                        value={formData.Tel}
+                        onChange={handleOnChange}
+                        isValid={formData.Tel.length >= 10}
+                        isInvalid={formData.Tel.length < 10}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                        El número de teléfono debe contar con un mínimo de 10 dígitos
+                    </Form.Control.Feedback>
+                    <Form.Control.Feedback type='valid'>Correcto</Form.Control.Feedback>
+                </Form.Group>
+            </Row>
             <Row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}>
-                {/* <Link to={`/ item / ${ item.Id } `}> */}
-                {/* "/checkout/:order" */}
-                {/* {/* <Link to={`/checkout/${orderDate}`}> */}
-                <Link to={`/checkout`}>
-                    <Button style={{ width: '200px', marginLeft: '90px', marginRight: 'auto' }} onClick={() => createOrder()}>Confirmar Compra</Button>
-                </Link>
+                <Button onClick={handleSubmit}>Confirmar Compra</Button>
             </Row>
         </Form>
-        //</Card >
     );
 }
-//Route path = "/checkout/:order"
+
+
 export default OrderForm;
 
-//
-//style from row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}
-
-//type = "submit"
+/*
+navigate("/checkout")
+<Link to={`/checkout`}>
+                        <Button style={{ width: '200px', marginLeft: '90px', marginRight: 'auto' }} type="submit">Confirmar Compra</Button>
+                    </Link>
+*/
 
 /*
-            <Row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}>
-                <Form.Group as={Col} md="2" controlId="validationLegal" name="Adult" onChange={handleOnChange}>
-                    <Form.Check
+<Button //type="submit"
+                    onClick={handleSubmit}
+                //onClick={validateFields() ? createOrder() : console.log("Faltan Validaciones")}
+                >Confirmar Compra</Button>
+*/
 
-                        label="Mayor de 18 años"
-                        feedback="Debes seleccionar la casilla"
-                        feedbackType="invalid"
-                    />
-                </Form.Group>*/
 /*
-<Link to={`/ item / ${ item.Id } `}>
-    <Button variant="primary">Detalle</Button>
-</Link>*/
+{submitted === true
+                    ?
+                    <Link to={`/checkout`}>
+                        <Button style={{ width: '200px', marginLeft: '90px', marginRight: 'auto' }} onClick={handleSubmit}>Confirmar Compra</Button>
+                    </Link>
+                    :
+                    <Button //type="submit"
+                        style={{ width: '200px', marginLeft: '90px', marginRight: 'auto' }}
+                        onClick={handleSubmit}
+                    //onClick={validateFields() ? createOrder() : console.log("Faltan Validaciones")}
+                    >Confirmar Compra</Button>
+                }
+*/
