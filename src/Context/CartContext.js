@@ -37,10 +37,14 @@ export default function CartProvider({ children }) {
     /*showClass: {
     popup: 'animate__animated animate__fadeInDown'
     }*/
+    /*removeItem(item);
+    setCartItems(getCartLength());
+    updateCartTotal();*/
     const clearCart = (option) => {
         setCartContent([]);
         let timerInterval;
-        removeCartWidget();
+        setBadge(0);
+        //removeCartWidget();
 
         if (option === 1) {
             Swal.fire({
@@ -105,22 +109,25 @@ export default function CartProvider({ children }) {
         return subtotal;
     }
 
-    const showCartWidget = () => {
+    /* const showCartWidget = () => {
+ 
+         let cartWidgetDiv = document.getElementById("cartWidget");
+         if (cartWidgetDiv.getAttribute("style") === "visibility: hidden") {
+             cartWidgetDiv.setAttribute('style', 'visibility: visible');
+         }
+     }*/
 
+    /*const removeCartWidget = () => {
         let cartWidgetDiv = document.getElementById("cartWidget");
-        if (cartWidgetDiv.getAttribute("style") === "visibility: hidden;") {
-            cartWidgetDiv.setAttribute('style', 'visibility: visible;');
-        }
-    }
+        cartWidgetDiv.setAttribute('style', 'visibility: hidden');
+    }*/
 
-    const removeCartWidget = () => {
-        let cartWidgetDiv = document.getElementById("cartWidget");
-        cartWidgetDiv.setAttribute('style', 'visibility: hidden;');
-    }
-
-    const setBadge = () => {
+    const setBadge = (number) => {
         let badgeValue = document.getElementById("badge");
-        badgeValue.innerHTML = getCartLength();
+        if (number === 0)
+            badgeValue.innerHTML = 0;
+        else
+            badgeValue.innerHTML = getCartLength();
     }
 
     const addItem = (objeto) => {
@@ -137,7 +144,7 @@ export default function CartProvider({ children }) {
             array.push(objeto);
             setCartContent(array);
             setBadge();
-            showCartWidget();
+            //showCartWidget();
             if (objeto.Cantidad === 1) {
                 Swal.fire({
                     position: 'center',
@@ -165,19 +172,7 @@ export default function CartProvider({ children }) {
         array.splice(getIndex(item), 1);
         setCartContent(array);
         setBadge();
-        if (getCartLength() === 0)
-            removeCartWidget();
     }
-
-    /* {
-         items.map(item =>
-         (
-             <div className="col-md-3" key={item.Id} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                 <Item item={item} />
-             </div>
-         )
-         )
-     }*/
 
     const totalCart = () => {
         let acu = 0;
@@ -185,11 +180,9 @@ export default function CartProvider({ children }) {
         return acu;
     }
 
-
-
     return (<cartContext.Provider value={{
         cartContent, addItem, isInCart, clearCart, getCartLength, getQuantity,
-        removeItem, increaseCartItem, decreaseCartItem, totalCart, subtotalItem
+        removeItem, increaseCartItem, decreaseCartItem, totalCart, subtotalItem, setBadge
     }}>
         {children}
     </cartContext.Provider>)

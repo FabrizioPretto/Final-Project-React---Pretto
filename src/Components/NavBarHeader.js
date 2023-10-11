@@ -11,7 +11,7 @@ function NavBarHeader({ props }) {
   return (
     <Navbar bg="light" variant="light">
       <Container>
-        <Navbar.Brand><LogoWidget /></Navbar.Brand>
+        <Navbar.Brand id="logo"><LogoWidget /></Navbar.Brand>
         <Nav className="me-auto" style={{ marginLeft: 'auto', marginRight: 'auto' }}>
           <ul>
             <li><Link to={`/category/${props[0]}`} style={{ textDecoration: 'none', color: 'black' }}> {props[0]}</Link></li>

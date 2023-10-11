@@ -11,12 +11,22 @@ import Cart from './Components/Cart';
 import CartProvider from './Context/CartContext';
 import SubHeader from './Components/SubHeader';
 import SlideShow from './Components/SlideShow';
+import Footer from './Components/Footer';
+import { useRef, useEffect } from 'react';
 
 function App() {
+
+  //const focusRef = useRef(null);
+  /*
+    useEffect(() => {
+      focusRef.current.focus();
+    }, []);*/
+
+  //ref={focusRef}
   return (
     <CartProvider>
       <BrowserRouter>
-        <div className="App" style={{ backgroundColor: '#f8f9fa' }}>
+        <div className="App" style={{ backgroundColor: '#f8f9fa', scrollBehavior: 'smooth' }}>
           <NavBarHeader props={["Bierhaus", "Astor", "Baba", "Beata", "Kraken", "Mur", "Peñón del Águila", "Strange Brewing"]} />
           <SubHeader />
           <SlideShow />
@@ -30,6 +40,7 @@ function App() {
               <Route path="/checkout" exact element={<CheckOut />}></Route>
             </Routes>
           </div>
+          <Footer />
         </div>
       </BrowserRouter>
     </CartProvider>

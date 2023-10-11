@@ -46,22 +46,22 @@ function OrderForm() {
 
     function validateFields() {
         if (formData.Name.length < 3) {
-            setFocus(formData.Name);
+            //setFocus(formData.Name);
             setValidated(false);
         }
         else {
             if (formData.Surname.length < 3) {
-                formData.Surname;
+                //formData.Surname;
                 setValidated(false);
             }
             else {
                 if (!expresion.test(formData.Email)) {
-                    setFocus(formData.Email);
+                    //setFocus(formData.Email);
                     setValidated(false);
                 }
                 else {
                     if (formData.Tel.length < 10) {
-                        setFocus(formData.Tel);
+                        //setFocus(formData.Tel);
                         setValidated(false);
                     }
                     else {
@@ -115,18 +115,17 @@ function OrderForm() {
         })
         setSubmitted(true);
 
-        //ARCHIVO README - Probar desde una computadora externa los comandos de cd e install
-        //VALIDACIONES SUBSCRIBE Y FORMULARIO DE DATOS
-        //BUILD Y NETLIFY
     }
-
+    //width: '600px', height: '600px', 
     return (
-        <Form noValidate validated={validated} onSubmit={handleSubmit} onChange={handleOnChange}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit} onChange={handleOnChange}
+            style={{ width: '800px', height: '450px', marginLeft: '25px', textAlign: 'center', marginTop: '20px' }}>
             <Row className="mb-3">
                 <Form.Group as={Col} md="5" controlId="nameValidation">
                     <Form.Label>Nombre</Form.Label>
                     <Form.Control
                         required
+                        autofocus
                         type="text"
                         placeholder="Juan"
                         name="Name"
@@ -194,8 +193,8 @@ function OrderForm() {
                     <Form.Control.Feedback type='valid'>Correcto</Form.Control.Feedback>
                 </Form.Group>
             </Row>
-            <Row style={{ display: 'flex', flexDirection: 'row', marginLeft: 'auto', marginRight: 'auto' }}>
-                <Button onClick={handleSubmit}>Confirmar Compra</Button>
+            <Row className="mb-3" md="4" style={{ display: 'flex', flexDirection: 'row' }}>
+                <Button onClick={handleSubmit} style={{ marginLeft: '250px' }}>Confirmar Compra</Button>
             </Row>
         </Form>
     );

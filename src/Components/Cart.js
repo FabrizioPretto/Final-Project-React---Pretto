@@ -17,7 +17,7 @@ import { collection, getDocs, getFirestore, query, where } from 'firebase/firest
 const Cart = () => {
     //let { nro } = useParams();
 
-    const { cartContent, clearCart, getCartLength, removeItem, subtotalItem, increaseCartItem, decreaseCartItem } = ActualCartContext();
+    const { cartContent, clearCart, setBadge, getCartLength, removeItem, subtotalItem, increaseCartItem, decreaseCartItem } = ActualCartContext();
     const [cartItems, setCartItems] = useState(getCartLength());
     //const [subtotalItem, setSubtotalItem] = useState();
     const [cantidad, setCantidad] = useState(1);
@@ -49,7 +49,6 @@ const Cart = () => {
         setCartItems(getCartLength());
         updateCartTotal();
     }
-
 
     function setSubtotalRow(price, quantity, idProduct) {
         let counterValue = document.getElementById(`subtotalRow${idProduct}`);
@@ -114,7 +113,10 @@ const Cart = () => {
     if (cartItems > 0) {
 
         return (<>
-            <div id='cartContainer' style={{ width: '1600px', display: 'flex', flexWrap: 'wrap', alignContent: 'space-around', alignItems: 'baseline', marginLeft: 'auto', marginRight: 'auto' }}>
+            <div id='cartContainer' style={{
+                width: '1600px', display: 'flex', flexWrap: 'wrap',
+                alignContent: 'space-around', alignItems: 'baseline', marginLeft: 'auto', marginRight: 'auto'
+            }}>
                 <Table striped bordered hover size="sm" id='CartTable'>
                     <thead>
                         <tr>
@@ -137,17 +139,32 @@ const Cart = () => {
                         <Card.Title id='total'>Total: $ {updateCartTotal()}</Card.Title>
                         <Button onClick={() => showOrderForm()} variant="success">Realizar Compra</Button>
                         <Link to={`/`}>
-                            <Button variant="warning" style={{ marginLeft: '7px', marginTop: '10px' }} onClick={() => { clearCart(1) }}>Vaciar Carrito</Button>
+                            <Button variant="warning" style={{ marginLeft: '7px', marginTop: '10px' }} onClick={() => { clearCart(); setCartItems(0); }}>Vaciar Carrito</Button>
                         </Link>
                     </Card.Body>
                 </Card>
-                <div id="orderForm"><OrderForm /></div>
+                <div id="orderForm"
+                    style={{ visibility: 'hidden' }}
+                ><OrderForm /></div>
             </div>
         </>
-        );//style={{ visibility: 'collapse', border: 'solid', backgroundColor: 'red' }} 
+        );
     }
     else {
-        return (<Card style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '25px' }}>
+        return (<div style={{ width: '30rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '25px', fontSize: '20px' }}>
+            <p>No existen artículos en el carrito</p>
+            <p>Presione
+                <Link to={`/`} style={{ textDecoration: 'none' }}><strong> aquí </strong></Link>
+                para regresar al inicio</p>
+        </div>);
+    }
+
+}
+
+export default Cart;
+
+/*
+<Card style={{ width: '18rem', marginLeft: 'auto', marginRight: 'auto', marginTop: '25px' }}>
             <Card.Body>
                 <Card.Title>Ooops...</Card.Title>
                 <Card.Text>
@@ -157,12 +174,8 @@ const Cart = () => {
                     <Button variant="primary">Seguir Comprando</Button>
                 </Link>
             </Card.Body>
-        </Card>);
-    }
-
-}
-
-export default Cart;
+        </Card>
+*/
 
 /*
 {cartContent.map(item =>

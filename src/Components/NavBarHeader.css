@@ -1,7 +1,6 @@
 
 .Container{
     background-color: white;
-    
 }
 
 #LogoTienda {
@@ -20,3 +19,48 @@ ul li{
     font-size: 20px;
 }
 
+li:hover{
+    font-size: 25px;
+}
+/*
+@media handheld, screen and (min-width: 600px) and (max-width: 1023px)
+{
+    #logo{
+        width: 25px;
+        height: 25px;
+    }
+    #LogoTienda{
+        margin-left: 10px;
+    }
+   
+    ul li{
+        list-style-type: none;
+        display:inline;
+        margin-right: 10px;
+        font-size: 15px;
+    }
+
+    li:hover{
+        font-size: 20px;
+    }
+
+}
+
+@media handheld, screen and (max-width: 599px)
+{    
+    #logo{
+        top: 0px;
+        width: 15px;
+        height: 15px;
+    }
+
+    ul li{
+        list-style-type: none;
+        display:inline;
+        margin-right: 10px;
+        font-size: 10px;
+    }
+    li:hover{
+        font-size: 15px;
+    }
+}*/

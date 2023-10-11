@@ -7,7 +7,7 @@ const LogoWidget = () => {
     return (
 
         <Link to={`/`}>
-            <img alt="logo_image" src={logo} />
+            <img id='logo_image' alt="logo_image" src={logo} />
         </Link>
 
     );
